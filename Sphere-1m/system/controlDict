@@ -1,0 +1,164 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+application     pimpleFoam;
+
+startFrom       startTime;
+// startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         9.048; //120 vortex sheddings
+
+deltaT          0.00029; // 0.014693349 ÷ 50 = 0.000293867
+
+writeControl    timeStep;
+
+writeInterval   65;
+
+purgeWrite      8;
+
+writeFormat     binary;
+
+writePrecision  6;
+
+writeCompression on;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable true;
+
+adjustTimeStep  no;
+
+maxCo           0.5;
+
+functions
+{
+	probes
+	{
+		type            probes;
+		functionObjectLibs ("libsampling.so");
+		outputControl   timeStep;
+		outputInterval  1;
+		probeLocations
+		(
+			( 1.0     0.6     0 ) // i
+			( 2.0     0.6     0 ) // ii
+			( 1.7     0.59    0 ) // iii
+			( 3.0     0.6     0 ) // iv
+			( 5.0     0.5     0 ) // v
+			(-0.172917187637  0.470213404977  0 ) // vi
+			(0.501    0       0 ) // vii
+			(1        0       0 ) // viii
+			(2        0       0 ) // ix
+			(5        0       0 ) // x
+			(10       0       0 ) // xi
+		);
+		fields
+		(
+			p
+			U
+		);
+	}
+	
+	#include "center_line"
+	#include "vertical_line_0p2"
+	#include "vertical_line_1p6"
+	#include "vertical_line_2"
+	#include "vertical_line_3"
+	#include "vertical_line_5"
+	#include "vertical_line_10"
+	
+// 	forces
+// 	{
+// 		type                forces;
+// 		functionObjectLibs  ("libforces.so");
+// 		outputControl       timeStep;
+// 		outputInterval      1;
+// 		
+// 		patches             ("sphere");
+// 		pName               p;
+// 		UName               U;
+// 		rhoName             rhoInf;
+// 		log                 true;
+// 		
+// 		CofR                (0 0 0);
+// 		
+// 		rhoInf              1.225;
+// 	}
+	
+	forcesCoeffs
+	{
+		type                forceCoeffs;
+		functionObjectLibs  ( "libforces.so" );
+		outputControl       timeStep;
+		outputInterval      1;
+		
+		patches             ("sphere");
+		pName               p;
+		UName               U;
+		rhoName             rhoInf;
+		log                 true;
+		
+		liftDir ( 0 1 0 );
+		dragDir ( 1 0 0 );
+		pitchAxis ( 0 0 0 );
+		CofR ( 0 0 0 );
+		
+		rhoInf 1.225;
+		magUInf 68.058;
+		
+		lRef 1;
+		Aref 0.785398163;
+	}
+	
+	desField
+	{
+		type            DESModelRegions;
+		functionObjectLibs ("libutilityFunctionObjects.so");
+		log             true;
+		//region "region0";
+		enabled on;
+		storeFilter on;
+// 		timeStart 0.0;
+// 		timeEnd 10.0;
+// 		outputControl       timeStep;
+		outputControl       outputTime
+		outputInterval      1;
+	}
+	
+// 	minMax
+// 	{
+// 		type        fieldMinMax;
+// 		functionObjectLibs ("libfieldFunctionObjects.so");
+// 		write       yes;
+// 		log         yes;
+// 		location    yes;
+// 		mode        magnitude;
+// 		fields
+// 		(
+// 			U
+// 			p
+// 		);
+// 	}
+}
+
+// ************************************************************************* //

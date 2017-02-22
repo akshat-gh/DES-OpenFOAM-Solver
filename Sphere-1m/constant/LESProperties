@@ -1,0 +1,43 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      LESProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+LESModel       SpalartAllmarasIDDES;
+
+turbulence     on;
+
+printCoeffs    on;
+
+delta          cubeRootVol;
+
+SpalartAllmarasIDDESCoeffs
+{
+	delta           IDDESDelta;
+	
+	IDDESDeltaCoeffs
+	{
+		delta           cubeRootVol;
+	    deltaCoeff      2;//1; 2 for hexMesh
+	}
+	
+}
+
+cubeRootVolCoeffs
+{
+    deltaCoeff      1;
+}
+
+// ************************************************************************* //

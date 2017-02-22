@@ -1,0 +1,195 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                |
+| \\      /  F ield         | OpenFOAM GUI Project: creativeFields           |
+|  \\    /   O peration     | Version:  0.8.9.0                              |
+|   \\  /    A nd           | Web: www.c-fields.com                          |
+|    \\/     M anipulation  |                                                |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+version	2;
+format	ascii;
+class	dictionary;
+location	"system";
+object	meshDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+// // // // // // // // //
+// // // GENERAL  // // //
+// // // // // // // // //
+
+workflowControls
+{
+// 	stopAfter	templateGeneration;
+// 	stopAfter	surfaceTopology;
+// 	stopAfter	surfaceProjection;
+// 	stopAfter	patchAssignment;
+// 	stopAfter	edgeExtraction;
+// 	stopAfter	boundaryLayerGeneration;
+// 	stopAfter	meshOptimisation;
+// 	stopAfter	boundaryLayerRefinement;
+	
+// 	restartFromLatestStep 1;
+}
+
+surfaceFile	"input.fms";
+
+// maxCellSize	.16; // 0.25
+maxCellSize	.3175; // 0.275
+// minCellSize	0.05;
+
+// // // // // // // // // //
+// // // REFINEMENT  // // //
+// // // // // // // // // //
+
+objectRefinements
+{
+	sphere1
+	{
+// 		cellSize 0.04; // 0.0625
+		additionalRefinementLevels 4; // 3
+// 		refinementThickness 0;
+		type sphere;
+		centre   (0 0 0);
+// 		radius   1;
+		radius   1.25;
+	}
+	cone1
+	{
+// 		cellSize 0.04; // 0.0625
+		additionalRefinementLevels 4; // 3
+// 		refinementThickness 0;
+		type cone;
+		p0       (0 0 0);
+		p1       (3 0 0);
+		radius0  1;
+		radius1  1;
+	}
+	cone2
+	{
+// 		cellSize 0.08; // 0.125
+		additionalRefinementLevels 3; // 2
+// 		refinementThickness 0;
+		type cone;
+		p0       (0 0 0);
+// 		p1       (25 0 0);
+		p1       (12 0 0);
+		radius0  1;
+// 		radius1  1;
+		radius1  2;
+	}
+}
+
+localRefinement
+{
+	"sphere"
+	{
+// 		cellSize 0.01; // 0.015625
+		additionalRefinementLevels 5; // 4
+		refinementThickness	.1;
+	}
+}
+
+surfaceMeshRefinement
+{
+// 	surf1
+// 	{
+// 		surfaceFile "prop.stl";
+// 		cellSize 0.01;
+// // 		additionalRefinementLevels 9;
+// // 		refinementThickness	0.05;
+// 		refinementThickness	0.025;
+// 	}
+}
+
+edgeMeshRefinement
+{
+// 	edge1
+// 	{
+// 		edgeFile "edges.vtk";
+// // 		cellSize 1;
+// 		additionalRefinementLevels 11;
+// 		refinementThickness	0.01;
+// 	}
+}
+
+anisotropicSources
+{
+// 	aniso1
+// 	{
+// 		scaleX  1;
+// 		scaleY  1;
+// 		scaleZ  0.1;
+// 		
+// 		type box;
+// 		centre  (50 175 50);
+// 		lengthX  100;
+// 		lengthY  150;
+// 		lengthZ  100;
+// 	}
+}
+
+// // // // // // // // // // // //
+// // // PRISMATIC LAYERS  // // //
+// // // // // // // // // // // //
+
+//  Rho =	1.225 kg/m^3
+//  Mu =	0.00833735 Pa.s
+//  L =	1 m
+//  U =	68.06 m/s
+//  y+ =	1
+//  Total thickness =	0.017 m
+//  Ratio =	1.2
+
+boundaryLayers
+{
+	nLayers 0;
+// // 	thicknessRatio 1.2;
+// // 	maxFirstLayerThickness 0.5;
+	
+	patchBoundaryLayers
+	{
+		"sphere"
+		{
+			nLayers			5; // 17
+			thicknessRatio		1.2; // 1.2
+			maxFirstLayerThickness	0.001; // 0.001
+// 			allowDiscontinuity	1;// 0 (False)
+		}
+	}
+	
+	optimiseLayer		1;// 0 (False)
+	
+// 	optimisationParameters
+// 	{
+// 		nSmoothNormals		5;// 5
+// 		maxNumIterations	5;// 5
+// 		featureSizeFactor	0.3;// 0.3
+// 		reCalculateNormals	1;// 1 (True)
+// 		relThicknessTol		0.1;
+// 	}
+}
+
+// // // // // // // // // // //
+// // // PATCH RENAMING // // //
+// // // // // // // // // // //
+
+renameBoundary
+{
+//     defaultName		walls;
+//     defaultType		wall;
+// 
+    newPatchNames
+    {
+//         "w_.*"
+//         {
+//             newName     "w_wall";
+//             newType     wall;
+//         }
+    }
+}
+            
+// ************************************************************************* //

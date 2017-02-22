@@ -1,0 +1,54 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  3.0.1                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    object      nuTilda;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 2 -1 0 0 0 0];
+
+// sqrt(3/2 * U * I * l)
+// Upstream velocity U = 68.058 m/s
+// Turbulence intensity I = 0.1 %
+// Turbulent length scale l = 5% * 1 m
+// √(3÷2 × 68.058 × 0.001 × (0.05 * 1.0)) = 0.071444734
+
+internalField   uniform 0.071444734;
+
+boundaryField
+{
+    inlet
+    {
+        type            fixedValue;
+        value           $internalField;
+    }
+
+    outlet
+    {
+        type            inletOutlet;
+        inletValue      $internalField;
+        value           $internalField;
+    }
+
+    sphere
+    {
+        type            fixedValue;
+        value           uniform 0;
+    }
+
+    sides
+    {
+        type            symmetry;
+    }
+}
+
+// ************************************************************************* //
